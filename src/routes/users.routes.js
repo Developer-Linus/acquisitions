@@ -1,8 +1,22 @@
 import express from 'express';
-import { fetchAllUsers, getUserById, updateUser, deleteUser } from '#controllers/users.controller.js';
-import { requireAuth, requireRole, requireSelfOrRole } from '#middlewares/auth.middleware.js';
+import {
+  fetchAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} from '#controllers/users.controller.js';
+
+import {
+  authenticateToken,
+  requireAuth,
+  requireRole,
+  requireSelfOrRole,
+} from '#middlewares/auth.middleware.js';
 
 const router = express.Router();
+
+// Middleware chain: always authenticate first
+router.use(authenticateToken);
 
 // List all users (admin only)
 router.get('/', requireAuth, requireRole('admin'), fetchAllUsers);

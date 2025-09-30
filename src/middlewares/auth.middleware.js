@@ -1,37 +1,68 @@
-// Require that a user is authenticated
+import { jwttoken } from '#utils/jwt.js';
+import logger from '#config/logger.js';
+
+// Verify token and attach user to req
+export const authenticateToken = (req, res, next) => {
+  try {
+    const token = req.cookies?.token;
+    if (!token) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    const payload = jwttoken.verify(token);
+    req.user = payload; // attach decoded { id, email, role }
+    next();
+  } catch (err) {
+    logger.error('Token verification failed', err);
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+};
+
+// Require authenticated user
 export const requireAuth = (req, res, next) => {
   if (!req.user) {
+    logger.error('Unauthorized access attempt: missing user on request');
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  return next();
+  next();
 };
 
-// Require that the user has one of the allowed roles
+// Require specific roles
 export const requireRole = (...allowedRoles) => (req, res, next) => {
   if (!req.user) {
+    logger.error('Unauthorized access attempt: missing user on request');
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  const role = req.user.role;
-  if (!allowedRoles.includes(role)) {
+  if (!allowedRoles.includes(req.user.role)) {
+    // Not logging here — forbidden is expected in normal flow
     return res.status(403).json({ error: 'Forbidden' });
   }
-  return next();
+  next();
 };
 
-// Require that the user is the resource owner (paramIdName) or has one of the roles
-export const requireSelfOrRole = (paramIdName = 'id', allowedRoles = ['admin']) => (req, res, next) => {
+// Require self or allowed role(s)
+export const requireSelfOrRole = (
+  paramIdName = 'id',
+  allowedRoles = ['admin']
+) => (req, res, next) => {
   if (!req.user) {
+    logger.error('Unauthorized access attempt: missing user on request');
     return res.status(401).json({ error: 'Unauthorized' });
   }
-  const rawParam = req.params?.[paramIdName];
-  const paramId = Number(rawParam);
-  if (!Number.isFinite(paramId)) {
-    return res.status(400).json({ error: 'Invalid resource id' });
+
+  const resourceId = req.params?.[paramIdName];
+  if (!resourceId) {
+    logger.error(`Invalid request: missing resource id param "${paramIdName}"`);
+    return res.status(400).json({ error: 'Missing resource id' });
   }
-  const isSelf = Number(req.user.id) === paramId;
+
+  const isSelf = String(req.user.id) === String(resourceId);
   const isAllowedRole = allowedRoles.includes(req.user.role);
+
   if (!isSelf && !isAllowedRole) {
+    // Not logging forbidden, as it's expected if user lacks privilege
     return res.status(403).json({ error: 'Forbidden' });
   }
-  return next();
+
+  next();
 };
