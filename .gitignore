@@ -1,3 +1,10 @@
+.DS_Store
+node_modules
+logs
+.env
+.env.*
+.neon_local/
+
 node_modules/
 .env.*
 .env

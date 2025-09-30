@@ -62,3 +62,7 @@
 {"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:28.610Z","userAgent":"HTTPie"}
 {"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:29.793Z","userAgent":"HTTPie"}
 {"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:37.523Z","userAgent":"HTTPie"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [30/Sep/2025:07:53:49 +0000] \"GET /api/auth/sign-in HTTP/1.1\" 404 155 \"-\" \"HTTPie\"","service":"user-service","timestamp":"2025-09-30T07:53:49.732Z"}
+{"level":"info","message":"User signed in: linusmksu22@gmail.com","service":"user-service","timestamp":"2025-09-30T07:53:59.900Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [30/Sep/2025:07:53:59 +0000] \"POST /api/auth/sign-in HTTP/1.1\" 200 101 \"-\" \"HTTPie\"","service":"user-service","timestamp":"2025-09-30T07:53:59.911Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [30/Sep/2025:07:54:17 +0000] \"POST /api/auth/sign-out HTTP/1.1\" 200 25 \"-\" \"HTTPie\"","service":"user-service","timestamp":"2025-09-30T07:54:17.005Z"}
