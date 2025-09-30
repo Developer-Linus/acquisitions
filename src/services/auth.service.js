@@ -4,7 +4,7 @@ import { db } from '#config/database.js';
 import { users } from '#models/user.model.js';
 import { eq } from 'drizzle-orm';
 
-const BCRYPT_COST = Number.parseInt(process.env.BCRYPT_COST || '11', 10);
+const BCRYPT_COST = Number.parseInt(process.env.BCRYPT_COST);
 
 export const hashPassword = async password => {
   try {
@@ -83,6 +83,6 @@ export const authenticateUser = async ({ email, password }) => {
   if (!isValid) {
     throw new Error('INVALID_CREDENTIALS');
   }
-  const { password: _pw, ...safeUser } = user;
+  const { password: _, ...safeUser } = user;
   return safeUser;
 };

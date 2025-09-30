@@ -1,25 +1,4 @@
 import js from '@eslint/js';
-import pluginPrettier from 'eslint-plugin-prettier';
-
-export default [
-  js.configs.recommended,
-  {
-    files: ['**/*.js'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
-    plugins: {
-      prettier: pluginPrettier,
-    },
-    rules: {
-      'prettier/prettier': 'error',
-    },
-    ignores: ['node_modules', 'logs'],
-  },
-];
-
-import js from '@eslint/js';
 
 export default [
   js.configs.recommended,
@@ -45,7 +24,7 @@ export default [
       'linebreak-style': ['error', 'unix'],
       quotes: ['error', 'single'],
       semi: ['error', 'always'],
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_'}],
       'no-console': 'off',
       'prefer-const': 'error',
       'no-var': 'error',

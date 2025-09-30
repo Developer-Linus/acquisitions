@@ -56,3 +56,9 @@
 {"level":"info","message":"User signed in: linusmksu22@gmail.com","service":"user-service","timestamp":"2025-09-30T06:12:09.403Z"}
 {"level":"info","message":"::ffff:127.0.0.1 - - [30/Sep/2025:06:12:09 +0000] \"POST /api/auth/sign-in HTTP/1.1\" 200 101 \"-\" \"HTTPie\"","service":"user-service","timestamp":"2025-09-30T06:12:09.404Z"}
 {"level":"info","message":"::ffff:127.0.0.1 - - [30/Sep/2025:06:12:33 +0000] \"POST /api/auth/sign-out HTTP/1.1\" 200 25 \"-\" \"HTTPie\"","service":"user-service","timestamp":"2025-09-30T06:12:33.746Z"}
+{"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:24.944Z","userAgent":"HTTPie"}
+{"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:26.116Z","userAgent":"HTTPie"}
+{"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:27.447Z","userAgent":"HTTPie"}
+{"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:28.610Z","userAgent":"HTTPie"}
+{"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:29.793Z","userAgent":"HTTPie"}
+{"ip":"::ffff:127.0.0.1","level":"warn","message":"Rate Limit exceeded.","path":"/health","service":"user-service","timestamp":"2025-09-30T07:50:37.523Z","userAgent":"HTTPie"}
