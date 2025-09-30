@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import authRoutes from '#routes/auth.routes.js';
 import securityMiddleware from '#middlewares/security.middleware.js';
+import userRoutes from '#routes/users.routes.js';
 
 const app = express();
 
@@ -64,6 +65,7 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Global error handler
 // eslint-disable-next-line no-unused-vars
