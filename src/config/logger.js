@@ -1,31 +1,29 @@
 import winston from 'winston';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Ensure logs directory exists to avoid runtime errors on first write
+const logsDir = path.resolve(process.cwd(), 'logs');
+try {
+  fs.mkdirSync(logsDir, { recursive: true });
+} catch {
+  // no-op; if this fails, file transports will error which is acceptable
+}
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
-    (winston.format.timestamp(),
+    winston.format.timestamp(),
     winston.format.errors({ stack: true }),
-    winston.format.json())
+    winston.format.json()
   ),
   defaultMeta: { service: 'user-service' },
   transports: [
-    //
-    // - Write all logs with importance level of `error` or higher to `error.log`
-    //   (i.e., error, fatal, but not other levels)
-    //
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    //
-    // - Write all logs with importance level of `info` or higher to `combined.log`
-    //   (i.e., fatal, error, warn, and info, but not trace)
-    //
-    new winston.transports.File({ filename: 'logs/combined.log' }),
+    new winston.transports.File({ filename: path.join(logsDir, 'error.log'), level: 'error' }),
+    new winston.transports.File({ filename: path.join(logsDir, 'combined.log') }),
   ],
 });
 
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
     new winston.transports.Console({
@@ -36,4 +34,5 @@ if (process.env.NODE_ENV !== 'production') {
     })
   );
 }
+
 export default logger;

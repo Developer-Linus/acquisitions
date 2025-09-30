@@ -1,4 +1,25 @@
 import js from '@eslint/js';
+import pluginPrettier from 'eslint-plugin-prettier';
+
+export default [
+  js.configs.recommended,
+  {
+    files: ['**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    plugins: {
+      prettier: pluginPrettier,
+    },
+    rules: {
+      'prettier/prettier': 'error',
+    },
+    ignores: ['node_modules', 'logs'],
+  },
+];
+
+import js from '@eslint/js';
 
 export default [
   js.configs.recommended,
