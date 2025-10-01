@@ -66,3 +66,7 @@
 {"level":"info","message":"User signed in: linusmksu22@gmail.com","service":"user-service","timestamp":"2025-09-30T07:53:59.900Z"}
 {"level":"info","message":"::ffff:127.0.0.1 - - [30/Sep/2025:07:53:59 +0000] \"POST /api/auth/sign-in HTTP/1.1\" 200 101 \"-\" \"HTTPie\"","service":"user-service","timestamp":"2025-09-30T07:53:59.911Z"}
 {"level":"info","message":"::ffff:127.0.0.1 - - [30/Sep/2025:07:54:17 +0000] \"POST /api/auth/sign-out HTTP/1.1\" 200 25 \"-\" \"HTTPie\"","service":"user-service","timestamp":"2025-09-30T07:54:17.005Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [01/Oct/2025:07:15:29 +0000] \"GET /api HTTP/1.1\" 200 41 \"-\" \"-\"","service":"user-service","timestamp":"2025-10-01T07:15:29.405Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [01/Oct/2025:07:15:29 +0000] \"GET /nonexistent HTTP/1.1\" 404 15 \"-\" \"-\"","service":"user-service","timestamp":"2025-10-01T07:15:29.445Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [01/Oct/2025:07:17:27 +0000] \"GET /api HTTP/1.1\" 200 41 \"-\" \"-\"","service":"user-service","timestamp":"2025-10-01T07:17:27.383Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [01/Oct/2025:07:17:27 +0000] \"GET /nonexistent HTTP/1.1\" 404 27 \"-\" \"-\"","service":"user-service","timestamp":"2025-10-01T07:17:27.422Z"}

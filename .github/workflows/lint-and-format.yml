@@ -1,0 +1,60 @@
+name: Lint and Format
+
+on:
+  push:
+    branches: ["main", "staging"]
+  pull_request:
+    branches: ["main", "staging"]
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        id: eslint
+        run: |
+          npm run lint
+        continue-on-error: true
+
+      - name: Run Prettier check
+        id: prettier
+        run: |
+          npm run format:check
+        continue-on-error: true
+
+      - name: Lint/Format Summary
+        if: always()
+        run: |
+          {
+            echo "## Lint and Format Summary"
+            echo ""
+            echo "- ESLint status: ${{ steps.eslint.outcome }}"
+            echo "- Prettier status: ${{ steps.prettier.outcome }}"
+            echo ""
+            echo "If failures occurred, try:"
+            echo "- npm run lint:fix"
+            echo "- npm run format"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Annotate and fail if issues found
+        if: ${{ steps.eslint.outcome == 'failure' || steps.prettier.outcome == 'failure' }}
+        run: |
+          if [ "${{ steps.eslint.outcome }}" = "failure" ]; then
+            echo "::error ::ESLint found issues. Run 'npm run lint:fix' locally to auto-fix where possible, then commit the changes.";
+          fi
+          if [ "${{ steps.prettier.outcome }}" = "failure" ]; then
+            echo "::error ::Prettier formatting check failed. Run 'npm run format' locally to apply formatting, then commit the changes.";
+          fi
+          exit 1
