@@ -15,14 +15,16 @@ const userSelect = {
 
 export const getAllUsers = async () => {
   try {
-    return await db.select({
-      id: users.id,
-      email: users.email,
-      name: users.name,
-      role: users.role,
-      created_at: users.created_at,
-      updated_at: users.updated_at,
-    }).from(users);
+    return await db
+      .select({
+        id: users.id,
+        email: users.email,
+        name: users.name,
+        role: users.role,
+        created_at: users.created_at,
+        updated_at: users.updated_at,
+      })
+      .from(users);
   } catch (e) {
     logger.error('Error getting users', e);
     throw new Error('Error getting users');
@@ -59,7 +61,9 @@ export const updateUser = async (id, updates) => {
     // Allow only specific fields to be updated
     const allowed = ['name', 'email', 'role'];
     const payload = Object.fromEntries(
-      Object.entries(updates || {}).filter(([k, v]) => allowed.includes(k) && v !== undefined)
+      Object.entries(updates || {}).filter(
+        ([k, v]) => allowed.includes(k) && v !== undefined
+      )
     );
 
     if (Object.keys(payload).length === 0) {
@@ -78,7 +82,11 @@ export const updateUser = async (id, updates) => {
     // Handle Postgres unique violation (duplicate email)
     const code = e && (e.code || e?.cause?.code);
     const message = typeof e?.message === 'string' ? e.message : '';
-    if (code === '23505' || message.toLowerCase().includes('duplicate key') || message.toLowerCase().includes('unique')) {
+    if (
+      code === '23505' ||
+      message.toLowerCase().includes('duplicate key') ||
+      message.toLowerCase().includes('unique')
+    ) {
       throw new Error('EMAIL_TAKEN');
     }
     logger.error(`Error updating user (${id}): ${e}`);

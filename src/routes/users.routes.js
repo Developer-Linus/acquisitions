@@ -22,12 +22,22 @@ router.use(authenticateToken);
 router.get('/', requireAuth, requireRole('admin'), fetchAllUsers);
 
 // Get a user by id (self or admin)
-router.get('/:id', requireAuth, requireSelfOrRole('id', ['admin']), getUserById);
+router.get(
+  '/:id',
+  requireAuth,
+  requireSelfOrRole('id', ['admin']),
+  getUserById
+);
 
 // Update a user (self or admin)
 router.put('/:id', requireAuth, requireSelfOrRole('id', ['admin']), updateUser);
 
 // Delete a user (self or admin)
-router.delete('/:id', requireAuth, requireSelfOrRole('id', ['admin']), deleteUser);
+router.delete(
+  '/:id',
+  requireAuth,
+  requireSelfOrRole('id', ['admin']),
+  deleteUser
+);
 
 export default router;

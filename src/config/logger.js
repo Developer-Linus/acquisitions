@@ -19,8 +19,13 @@ const logger = winston.createLogger({
   ),
   defaultMeta: { service: 'user-service' },
   transports: [
-    new winston.transports.File({ filename: path.join(logsDir, 'error.log'), level: 'error' }),
-    new winston.transports.File({ filename: path.join(logsDir, 'combined.log') }),
+    new winston.transports.File({
+      filename: path.join(logsDir, 'error.log'),
+      level: 'error',
+    }),
+    new winston.transports.File({
+      filename: path.join(logsDir, 'combined.log'),
+    }),
   ],
 });
 

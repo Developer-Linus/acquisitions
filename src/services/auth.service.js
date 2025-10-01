@@ -36,7 +36,11 @@ export const createUser = async ({ name, email, password, role = 'user' }) => {
     // Handle Postgres unique violation (duplicate email)
     const code = e && (e.code || e?.cause?.code);
     const message = typeof e?.message === 'string' ? e.message : '';
-    if (code === '23505' || message.toLowerCase().includes('duplicate key') || message.toLowerCase().includes('unique')) {
+    if (
+      code === '23505' ||
+      message.toLowerCase().includes('duplicate key') ||
+      message.toLowerCase().includes('unique')
+    ) {
       throw new Error('EMAIL_TAKEN');
     }
     logger.error(`Error creating the user: ${e}`);

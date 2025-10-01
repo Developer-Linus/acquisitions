@@ -2,23 +2,24 @@ name: Tests
 
 on:
   push:
-    branches: ["main", "staging"]
+    branches:
+      - main
+      - staging
   pull_request:
-    branches: ["main", "staging"]
+    branches:
+      - main
+      - staging
 
 jobs:
   test:
+    name: Run Tests
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: test
-      NODE_OPTIONS: --experimental-vm-modules
-      # Provide a placeholder DB URL; replace with a real test DB or service if needed
-      DATABASE_URL: postgres://user:pass@localhost:5432/testdb
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
@@ -28,43 +29,49 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        id: run-tests
+        id: tests
         run: |
-          set -euo pipefail
+          echo "::notice::Running test suite..."
           npm test
-        continue-on-error: true
+        env:
+          NODE_ENV: test
+          NODE_OPTIONS: --experimental-vm-modules
+          DATABASE_URL: ${{ secrets.TEST_DATABASE_URL || 'postgresql://test:test@localhost:5432/test_acquisitions' }}
+          JWT_SECRET: test-secret-for-ci
+          LOG_LEVEL: error
 
-      - name: Upload coverage artifact
+      - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage
+          name: coverage-reports
           path: |
-            coverage/**
-            coverage/lcov.info
-          if-no-files-found: ignore
+            coverage/
+            test-results.xml
           retention-days: 30
+          if-no-files-found: warn
 
-      - name: Test Summary
+      - name: Generate test summary
         if: always()
         run: |
-          status="${{ steps.run-tests.outcome }}"
-          {
-            echo "## Test Summary"
-            echo ""
-            echo "- Status: ${status}"
-            if [ -f coverage/lcov.info ] || [ -d coverage ]; then
-              echo "- Coverage: coverage artifacts uploaded."
-            else
-              echo "- Coverage: none detected."
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
+          echo "## Test Results 🧪" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.tests.outcome }}" == "success" ]; then
+            echo "✅ All tests passed successfully!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Coverage Status" >> $GITHUB_STEP_SUMMARY
+            echo "Coverage reports have been uploaded as artifacts and retained for 30 days." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Some tests failed. Please check the logs above for details." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+            echo "1. Review the failing test output above" >> $GITHUB_STEP_SUMMARY
+            echo "2. Fix the failing tests locally" >> $GITHUB_STEP_SUMMARY
+            echo "3. Run \`npm test\` locally to verify fixes" >> $GITHUB_STEP_SUMMARY
+            echo "4. Commit and push your changes" >> $GITHUB_STEP_SUMMARY
+          fi
 
-      - name: Annotate failures
-        if: ${{ failure() || steps.run-tests.outcome == 'failure' }}
+      - name: Annotate test failures
+        if: failure()
         run: |
-          echo "::error ::One or more tests failed. See logs above. Run 'npm test' locally to reproduce."
-
-      - name: Fail job if tests failed
-        if: ${{ steps.run-tests.outcome != 'success' }}
-        run: exit 1
+          echo "::error::Test suite failed - please check the test output for specific failure details"
+          echo "::notice::Run 'npm test' locally to reproduce and debug the failing tests"

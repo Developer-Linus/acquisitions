@@ -2,7 +2,7 @@ name: Docker Build and Push
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   workflow_dispatch: {}
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/acquisitions
+          images: ${{ secrets.DOCKER_USERNAME }}/kubernetes-demo-api:latest
           tags: |
             type=ref,event=branch
             type=sha
@@ -62,8 +62,8 @@ jobs:
 
       - name: Summary
         run: |
-            echo "## Docker Image Published" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "- Image: ${{ secrets.DOCKER_USERNAME }}/acquisitions" >> "$GITHUB_STEP_SUMMARY"
-            echo "- Tags:" >> "$GITHUB_STEP_SUMMARY"
-            echo '${{ steps.meta.outputs.tags }}' | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY"
+          echo "## Docker Image Published" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Image: ${{ secrets.DOCKER_USERNAME }}/acquisitions" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tags:" >> "$GITHUB_STEP_SUMMARY"
+          echo '${{ steps.meta.outputs.tags }}' | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY"
