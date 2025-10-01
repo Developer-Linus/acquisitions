@@ -1,7 +1,34 @@
 import js from '@eslint/js';
+import prettier from 'eslint-plugin-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
   js.configs.recommended,
+
+  // Prettier integration
+  {
+    plugins: {
+      prettier,
+    },
+    rules: {
+      ...eslintConfigPrettier.rules, // disables conflicting formatting rules
+      'prettier/prettier': [
+        'error',
+        {
+          semi: true,
+          trailingComma: 'es5',
+          singleQuote: true,
+          printWidth: 80,
+          tabWidth: 2,
+          useTabs: false,
+          bracketSpacing: true,
+          arrowParens: 'avoid',
+          endOfLine: 'lf',
+        },
+      ],
+    },
+  },
+
   {
     languageOptions: {
       ecmaVersion: 2022,
@@ -20,10 +47,7 @@ export default [
       },
     },
     rules: {
-      indent: ['error', 2, { SwitchCase: 1 }],
-      'linebreak-style': ['error', 'unix'],
-      quotes: ['error', 'single'],
-      semi: ['error', 'always'],
+      // REMOVE all formatting rules that Prettier handles
       'no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
@@ -35,6 +59,7 @@ export default [
       'prefer-arrow-callback': 'error',
     },
   },
+
   {
     files: ['tests/**/*.js'],
     languageOptions: {
@@ -50,6 +75,7 @@ export default [
       },
     },
   },
+
   {
     ignores: ['node_modules/**', 'coverage/**', 'logs/**', 'drizzle/**'],
   },

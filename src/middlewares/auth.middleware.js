@@ -30,42 +30,42 @@ export const requireAuth = (req, res, next) => {
 // Require specific roles
 export const requireRole =
   (...allowedRoles) =>
-    (req, res, next) => {
-      if (!req.user) {
-        logger.error('Unauthorized access attempt: missing user on request');
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-      if (!allowedRoles.includes(req.user.role)) {
+  (req, res, next) => {
+    if (!req.user) {
+      logger.error('Unauthorized access attempt: missing user on request');
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    if (!allowedRoles.includes(req.user.role)) {
       // Not logging here — forbidden is expected in normal flow
-        return res.status(403).json({ error: 'Forbidden' });
-      }
-      next();
-    };
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+    next();
+  };
 
 // Require self or allowed role(s)
 export const requireSelfOrRole =
   (paramIdName = 'id', allowedRoles = ['admin']) =>
-    (req, res, next) => {
-      if (!req.user) {
-        logger.error('Unauthorized access attempt: missing user on request');
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
+  (req, res, next) => {
+    if (!req.user) {
+      logger.error('Unauthorized access attempt: missing user on request');
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
 
-      const resourceId = req.params?.[paramIdName];
-      if (!resourceId) {
-        logger.error(
-          `Invalid request: missing resource id param "${paramIdName}"`
-        );
-        return res.status(400).json({ error: 'Missing resource id' });
-      }
+    const resourceId = req.params?.[paramIdName];
+    if (!resourceId) {
+      logger.error(
+        `Invalid request: missing resource id param "${paramIdName}"`
+      );
+      return res.status(400).json({ error: 'Missing resource id' });
+    }
 
-      const isSelf = String(req.user.id) === String(resourceId);
-      const isAllowedRole = allowedRoles.includes(req.user.role);
+    const isSelf = String(req.user.id) === String(resourceId);
+    const isAllowedRole = allowedRoles.includes(req.user.role);
 
-      if (!isSelf && !isAllowedRole) {
+    if (!isSelf && !isAllowedRole) {
       // Not logging forbidden, as it's expected if user lacks privilege
-        return res.status(403).json({ error: 'Forbidden' });
-      }
+      return res.status(403).json({ error: 'Forbidden' });
+    }
 
-      next();
-    };
+    next();
+  };
